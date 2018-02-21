@@ -10,6 +10,7 @@ Using the Laravel installer you can get up and running with a Laravel applicatio
 
 ### Environment Variables
 Here are some configurable environment values.
+* `APP_ENV` - Application environment. Any of `production`, `staging`, `testing` to load specific configuration at runtime from `.env.<environment>`
 * `WEBROOT` – Path to the web root. Default: `/var/www`
 * `PRODUCTION` – Is this a production environment. Default: `0`
 * `PHP_MEMORY_LIMIT` - PHP memory limit in megabytes. Example: `100`
