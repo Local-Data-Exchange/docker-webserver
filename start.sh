@@ -45,6 +45,7 @@ fi
 # Display PHP error's or not
 # ------------------------------------------
 
+sed -i "s/;error_log = log\\/php7\\/error.log/error_log = \\/dev\\/stderr/g" /etc/php7/php-fpm.conf
 if [[ "$APP_ENV" == "production" ]] || [[ "$PRODUCTION" == "1" ]] || [[ "$IN_PRODUCTION" == "1" ]]; then
     echo php_flag[display_errors] = off >> /etc/php7/php-fpm.conf
     echo log_level = warning >> /etc/php7/php-fpm.conf
