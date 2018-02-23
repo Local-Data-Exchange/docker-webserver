@@ -49,11 +49,9 @@ RUN set -ex \
 
 ##################  CONFIGURATION STARTS  ##################
 
-ADD start.sh /start.sh
 ADD rootfs /
 
-RUN chmod 755 /start.sh && \
-    ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
+RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
     chown -R nginx:nginx /var/www
 
@@ -63,5 +61,10 @@ EXPOSE 443 80
 
 WORKDIR /var/www
 
-ENTRYPOINT ["dockerize", "-template", "/etc/nginx:/etc/nginx", "-template", "/etc/php7:/etc/php7", "-stdout", "/var/www/storage/logs/laravel.log"]
-CMD ["/start.sh"]
+ENTRYPOINT ["dockerize", \
+    "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
+    "-template", "/etc/php7/php-fpm.conf:/etc/php7/php-fpm.conf", \
+    "-template", "/etc/php7/php-fpm.d:/etc/php7/php-fpm.d", \
+    "-stdout", "/var/www/storage/logs/laravel.log"]
+
+CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
