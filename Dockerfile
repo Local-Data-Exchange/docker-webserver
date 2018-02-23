@@ -1,9 +1,11 @@
 FROM alpine:3.7
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
-ENV php_conf /etc/php7/php.ini
-ENV fpm_conf /etc/php7/php-fpm.d/www.conf
 ENV composer_hash 544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061
+ENV DOCKERIZE_VERSION v0.6.0
+RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
+    && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
 ################## INSTALLATION STARTS ##################
 
@@ -48,36 +50,11 @@ RUN set -ex \
 ##################  CONFIGURATION STARTS  ##################
 
 ADD start.sh /start.sh
-ADD conf/supervisord.conf /etc/supervisord.conf
-ADD conf/nginx.conf /etc/nginx/nginx.conf
-ADD conf/nginx-site.conf /etc/nginx/sites-available/default.conf
+ADD rootfs /
 
 RUN chmod 755 /start.sh && \
     ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
-    sed -i \
-        -e "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g" \
-        -e "s/upload_max_filesize\s*=\s*2M/upload_max_filesize = 100M/g" \
-        -e "s/post_max_size\s*=\s*8M/post_max_size = 100M/g" \
-        -e "s/variables_order = \"GPCS\"/variables_order = \"EGPCS\"/g" \
-        ${php_conf} && \
-    sed -i \
-        -e "s/;daemonize\s*=\s*yes/daemonize = no/g" \
-        -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" \
-        -e "s/pm.max_children = 4/pm.max_children = 4/g" \
-        -e "s/pm.start_servers = 2/pm.start_servers = 3/g" \
-        -e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" \
-        -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" \
-        -e "s/pm.max_requests = 500/pm.max_requests = 200/g" \
-        -e "s/user = nobody/user = nginx/g" \
-        -e "s/group = nobody/group = nginx/g" \
-        -e "s/;listen.mode = 0660/listen.mode = 0666/g" \
-        -e "s/;listen.owner = nobody/listen.owner = nginx/g" \
-        -e "s/;listen.group = nobody/listen.group = nginx/g" \
-        -e "s/listen = 127.0.0.1:9000/listen = \/var\/run\/php-fpm.sock/g" \
-        -e "s/^;clear_env = no$/clear_env = no/" \
-        ${fpm_conf} && \
     ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
-    find /etc/php7/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \; && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
@@ -86,4 +63,5 @@ EXPOSE 443 80
 
 WORKDIR /var/www
 
+ENTRYPOINT ["dockerize", "-template", "/etc/nginx:/etc/nginx", "-template", "/etc/php7:/etc/php7", "-stdout", "/var/www/storage/logs/laravel.log"]
 CMD ["/start.sh"]

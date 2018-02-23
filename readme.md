@@ -19,3 +19,17 @@ Here are some configurable environment values.
 * `COMPOSER_DIRECTORY` - Path to where your  `composer.json` file lives. Example: `/var/www`
 * `LARAVEL` - Is this a Laravel application. If you set this to `1` then set your composer directory too. Default `0`
 * `RUN_MIGRATIONS` - Run Laravel migrations. (Will only work IF LARAVEL = 1). Default: `0`
+
+
+
+## Dockerize templating
+
+```
+dockerize -template src_dir:dest_dir
+```
+
+* `PHP_DISPLAY_ERRORS` - Display php-fpm errors (on/off)
+* `FPM_LOG_LEVEL` - php-fpm log level (warning for production, notice for dev/staging)
+* `PHP_MEMORY_LIMIT` - php memory limit (default 128M)
+* `PHP_POST_MAX_SIZE` - php post max size (default 100M)
+* `PHP_UPLOAD_MAX_FILESIZE` - php upload max file size (default 100M)
