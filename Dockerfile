@@ -3,6 +3,7 @@ MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV composer_hash 544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061
 ENV DOCKERIZE_VERSION v0.6.0
+ENV DRAFTER_VERSION v3.2.7
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -44,7 +45,7 @@ RUN set -ex \
     && php7 -r "unlink('composer-setup.php');" \
   # Install drafter
   && cd /tmp \
-    && git clone --recursive git://github.com/apiaryio/drafter.git \
+    && git clone -b '$DRAFTER_VERSION' --recursive --single-branch --depth 1 git@github.com:apiaryio/drafter.git \
     && cd drafter \
     && ./configure \
     && make drafter \
