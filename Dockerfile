@@ -71,6 +71,8 @@ EXPOSE 443 80
 
 WORKDIR /var/www
 
+ENV DRAFTER_PATH /usr/local/bin/drafter
+
 ENTRYPOINT ["dockerize", \
     "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
     "-template", "/etc/php7/php-fpm.conf:/etc/php7/php-fpm.conf", \
