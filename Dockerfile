@@ -65,6 +65,9 @@ ENTRYPOINT ["dockerize", \
     "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
     "-template", "/etc/php7/php-fpm.conf:/etc/php7/php-fpm.conf", \
     "-template", "/etc/php7/php-fpm.d:/etc/php7/php-fpm.d", \
-    "-stdout", "/var/www/storage/logs/laravel.log"]
+    "-stdout", "/var/www/storage/logs/laravel.log", \
+    "-stdout", "/var/log/nginx/error.log", \
+    "-stdout", "/var/log/php7/error.log", \
+    "-poll"]
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
