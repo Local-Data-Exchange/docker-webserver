@@ -45,7 +45,7 @@ RUN set -ex \
     && php7 -r "unlink('composer-setup.php');" \
   # Install drafter
   && cd /tmp \
-    && git clone -b '$DRAFTER_VERSION' --recursive --single-branch --depth 1 git@github.com:apiaryio/drafter.git \
+    && git clone -b '$DRAFTER_VERSION' --recursive --single-branch --depth 1 https://github.com/apiaryio/drafter.git \
     && cd drafter \
     && ./configure \
     && make drafter \
