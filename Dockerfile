@@ -1,7 +1,6 @@
 FROM alpine:3.8
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
-ENV composer_hash 93b54496392c062774670ac18b134c3b3a95e5a5e5c8f1a9f115f203b75bf9a129d5daa8ba6a13e2cc8a1da0806388a8
 ENV DOCKERIZE_VERSION v0.6.0
 ENV DRAFTER_VERSION v3.2.7
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
@@ -39,10 +38,11 @@ RUN set -ex \
     && rm -Rf /var/www/* \
     && rm -Rf /etc/nginx/nginx.conf \
   # Composer
-  && php7 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php7 -r "if (hash_file('SHA384', 'composer-setup.php') === '${composer_hash}') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+  && wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig \
+    && php7 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php7 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
     && php7 composer-setup.php --install-dir=/usr/bin --filename=composer \
-    && php7 -r "unlink('composer-setup.php');" \
+    && php7 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
   # Install drafter
   && cd /tmp \
     && git clone -b $DRAFTER_VERSION --recursive --single-branch --depth 1 https://github.com/apiaryio/drafter.git \
