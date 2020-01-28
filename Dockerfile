@@ -53,9 +53,9 @@ RUN set -ex \
     && make install \
     && drafter -v \
   # Install opencensus extension
-  && wget https://pecl.php.net/get/opencensus-0.2.2.tgz -O opencensus.tgz \
-    && tar -xzf opencensus.tgz \
-    && cd opencensus-0.2.2 \
+  && cd /tmp \
+    && git clone https://github.com/census-instrumentation/opencensus-php.git \
+    && cd opencensus-php/ext \
     && phpize \
     && ./configure --enable-opencensus \
     && make \
