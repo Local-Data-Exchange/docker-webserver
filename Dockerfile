@@ -65,7 +65,6 @@ ENTRYPOINT ["dockerize", \
     "-template", "/google-auth.json.tmpl:/google-auth.json", \
     "-stdout", "/var/www/storage/logs/laravel.log", \
     "-stdout", "/var/log/nginx/error.log", \
-    "-stdout", "/var/log/php7/error.log", \
-    "-inotify"]
+    "-stdout", "/var/log/php7/error.log"]
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
