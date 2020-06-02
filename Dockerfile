@@ -1,8 +1,7 @@
-FROM alpine:3.8
+FROM alpine:3.9
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV DOCKERIZE_VERSION v0.6.0
-ENV DRAFTER_VERSION v3.2.7
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -43,15 +42,6 @@ RUN set -ex \
     && php7 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
     && php7 composer-setup.php --install-dir=/usr/bin --filename=composer \
     && php7 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
-  # Install drafter
-  && cd /tmp \
-    && git clone -b $DRAFTER_VERSION --recursive --single-branch --depth 1 https://github.com/apiaryio/drafter.git \
-    && cd drafter \
-    && ./configure \
-    && make drafter \
-    && make install \
-    && drafter -v \
-    && cd && rm -rf /tmp/drafter \
   # Cleanup
   && apk del .build-deps
 
@@ -70,8 +60,6 @@ RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/defau
 EXPOSE 443 80
 
 WORKDIR /var/www
-
-ENV DRAFTER_PATH /usr/local/bin/drafter
 
 ENTRYPOINT ["dockerize", \
     "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
