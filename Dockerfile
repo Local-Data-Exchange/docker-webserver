@@ -13,7 +13,7 @@ RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
     autoconf automake build-base python gmp-dev \
     curl \
-    nodejs nodejs-npm \
+    php7-pdo_pgsql php7-pgsql nodejs nodejs-npm \
     tar \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
