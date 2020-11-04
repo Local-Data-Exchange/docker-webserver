@@ -11,7 +11,7 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Install OS Dependencies
 RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
-    autoconf automake build-base python gmp-dev \
+    autoconf automake build-base python3 gmp-dev \
     curl \
     nodejs nodejs-npm \
     tar \
