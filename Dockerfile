@@ -1,4 +1,4 @@
-FROM alpine:3.12
+FROM alpine:3.13
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV DOCKERIZE_VERSION v0.6.0
