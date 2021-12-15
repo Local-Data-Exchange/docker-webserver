@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV PHP_MEMORY_LIMIT 1024M
