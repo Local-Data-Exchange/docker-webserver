@@ -1,6 +1,7 @@
 FROM alpine:3.13
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
+ENV PHP_MEMORY_LIMIT 1024M
 ENV DOCKERIZE_VERSION v0.6.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
