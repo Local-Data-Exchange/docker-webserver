@@ -21,7 +21,7 @@ RUN set -ex \
     php8-fpm php8-gd php8-gmp php8-iconv php8-intl php8-mbstring php8-pecl-mcrypt \
     php8-mysqlnd php8-mysqli php8-opcache php8-openssl php8-pcntl php8-pecl-apcu php8-pdo php8-pdo_mysql \
     php8-phar php8-posix php8-session php8-simplexml php8-sockets php8-sqlite3 php8-tidy \
-    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php8-pecl-redis php8-soap php8-pdo_pgsql php8-pgsql \
+    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php8-pecl-redis php8-soap php8-sodium php8-pdo_sqlite php8-pdo_pgsql php8-pgsql \
     # Other dependencies
     mariadb-client sudo \
     # Miscellaneous packages
@@ -53,6 +53,7 @@ ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php8/php.ini /etc/php8/conf.d/php.ini && \
+    ln -s /usr/bin/php8 /usr/bin/php && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
