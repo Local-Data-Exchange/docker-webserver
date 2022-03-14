@@ -11,9 +11,9 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Install OS Dependencies
 RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
-    autoconf automake build-base python gmp-dev \
+    autoconf automake build-base python2 python3 gmp-dev \
     curl \
-    nodejs nodejs-npm \
+    nodejs npm \
     tar \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
@@ -38,10 +38,10 @@ RUN set -ex \
     && rm -Rf /etc/nginx/nginx.conf \
   # Composer
   && wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig \
-    && php7 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php7 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php7 composer-setup.php --install-dir=/usr/bin --filename=composer \
-    && php7 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
+    && php8 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php8 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php8 composer-setup.php --install-dir=/usr/bin --filename=composer \
+    && php8 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
   # Cleanup
   && apk del .build-deps
 
@@ -52,7 +52,7 @@ RUN set -ex \
 ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
-    ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
+    ln -s /etc/php8/php.ini /etc/php8/conf.d/php.ini && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
@@ -62,13 +62,13 @@ EXPOSE 443 80
 WORKDIR /var/www
 
 ENTRYPOINT ["dockerize", \
-    "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
-    "-template", "/etc/php7/php-fpm.conf:/etc/php7/php-fpm.conf", \
-    "-template", "/etc/php7/php-fpm.d:/etc/php7/php-fpm.d", \
+    "-template", "/etc/php8/php.ini:/etc/php8/php.ini", \
+    "-template", "/etc/php8/php-fpm.conf:/etc/php8/php-fpm.conf", \
+    "-template", "/etc/php8/php-fpm.d:/etc/php8/php-fpm.d", \
     "-template", "/google-auth.json.tmpl:/google-auth.json", \
     "-stdout", "/var/www/storage/logs/laravel.log", \
     "-stdout", "/var/log/nginx/error.log", \
-    "-stdout", "/var/log/php7/error.log", \
+    "-stdout", "/var/log/php8/error.log", \
     "-poll"]
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
