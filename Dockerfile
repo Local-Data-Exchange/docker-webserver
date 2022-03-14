@@ -18,10 +18,10 @@ RUN set -ex \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
     php8 php8-bcmath php8-ctype php8-curl php8-dom php8-exif php8-fileinfo \
-    php8-fpm php8-gd php8-gmp php8-iconv php8-intl php7-json php8-mbstring php7-mcrypt \
+    php8-fpm php8-gd php8-gmp php8-iconv php8-intl php8-mbstring php8-pecl-mcrypt \
     php8-mysqlnd php8-mysqli php8-opcache php8-openssl php8-pcntl php8-pecl-apcu php8-pdo php8-pdo_mysql \
     php8-phar php8-posix php8-session php8-simplexml php8-sockets php8-sqlite3 php8-tidy \
-    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php7-zlib php7-redis php8-soap php8-pdo_pgsql php8-pgsql \
+    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php8-pecl-redis php8-soap php8-pdo_pgsql php8-pgsql \
     # Other dependencies
     mariadb-client sudo \
     # Miscellaneous packages
