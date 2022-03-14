@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.15
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV DOCKERIZE_VERSION v0.6.0
@@ -17,11 +17,11 @@ RUN set -ex \
     tar \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
-    php7 php7-apcu php7-bcmath php7-dom php7-ctype php7-curl php7-exif php7-fileinfo \
-    php7-fpm php7-gd php7-gmp php7-iconv php7-intl php7-json php7-mbstring php7-mcrypt \
-    php7-mysqlnd php7-mysqli php7-opcache php7-openssl php7-pcntl php7-pdo php7-pdo_mysql \
-    php7-phar php7-posix php7-session php7-simplexml php7-sockets php7-sqlite3 php7-tidy \
-    php7-tokenizer php7-xml php7-xmlreader php7-xmlwriter php7-zip php7-zlib php7-redis php7-soap php7-pdo_pgsql php7-pgsql \
+    php8 php8-bcmath php8-ctype php8-curl php8-dom php8-exif php8-fileinfo \
+    php8-fpm php8-gd php8-gmp php8-iconv php8-intl php7-json php8-mbstring php7-mcrypt \
+    php8-mysqlnd php8-mysqli php8-opcache php8-openssl php8-pcntl php8-pecl-apcu php8-pdo php8-pdo_mysql \
+    php8-phar php8-posix php8-session php8-simplexml php8-sockets php8-sqlite3 php8-tidy \
+    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php7-zlib php7-redis php8-soap php8-pdo_pgsql php8-pgsql \
     # Other dependencies
     mariadb-client sudo \
     # Miscellaneous packages
