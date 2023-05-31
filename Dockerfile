@@ -1,7 +1,7 @@
-FROM alpine:3.15
+FROM alpine:3.18
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
-ENV DOCKERIZE_VERSION v0.6.0
+ENV DOCKERIZE_VERSION v0.7.0
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -11,17 +11,17 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
 # Install OS Dependencies
 RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
-    autoconf automake build-base python2 python3 gmp-dev \
+    autoconf automake build-base python3 gmp-dev \
     curl \
     nodejs npm \
     tar \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
-    php8 php8-bcmath php8-ctype php8-curl php8-dom php8-exif php8-fileinfo \
-    php8-fpm php8-gd php8-gmp php8-iconv php8-intl php8-mbstring php8-pecl-mcrypt \
-    php8-mysqlnd php8-mysqli php8-opcache php8-openssl php8-pcntl php8-pecl-apcu php8-pdo php8-pdo_mysql \
-    php8-phar php8-posix php8-session php8-simplexml php8-sockets php8-sqlite3 php8-tidy \
-    php8-tokenizer php8-xml php8-xmlreader php8-xmlwriter php8-zip php8-pecl-redis php8-soap php8-sodium php8-pdo_sqlite php8-pdo_pgsql php8-pgsql \
+    php82 php82-bcmath php82-ctype php82-curl php82-dom php82-exif php82-fileinfo \
+    php82-fpm php82-gd php82-gmp php82-iconv php82-intl php82-mbstring \
+    php82-mysqlnd php82-mysqli php82-opcache php82-openssl php82-pcntl php82-pecl-apcu php82-pdo php82-pdo_mysql \
+    php82-phar php82-posix php82-session php82-simplexml php82-sockets php82-sqlite3 php82-tidy \
+    php82-tokenizer php82-xml php82-xmlreader php82-xmlwriter php82-zip php82-pecl-redis php82-soap php82-sodium php82-pdo_sqlite php82-pdo_pgsql php82-pgsql \
     # Other dependencies
     mariadb-client sudo \
     # Miscellaneous packages
@@ -38,10 +38,10 @@ RUN set -ex \
     && rm -Rf /etc/nginx/nginx.conf \
   # Composer
   && wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig \
-    && php8 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
-    && php8 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php8 composer-setup.php --install-dir=/usr/bin --filename=composer \
-    && php8 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
+    && php82 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php82 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php82 composer-setup.php --install-dir=/usr/bin --filename=composer \
+    && php82 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
   # Cleanup
   && apk del .build-deps
 
@@ -52,8 +52,8 @@ RUN set -ex \
 ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
-    ln -s /etc/php8/php.ini /etc/php8/conf.d/php.ini && \
-    ln -s /usr/bin/php8 /usr/bin/php && \
+    ln -s /etc/php82/php.ini /etc/php82/conf.d/php.ini && \
+    ln -s /usr/bin/php82 /usr/bin/php && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
@@ -63,13 +63,13 @@ EXPOSE 443 80
 WORKDIR /var/www
 
 ENTRYPOINT ["dockerize", \
-    "-template", "/etc/php8/php.ini:/etc/php8/php.ini", \
-    "-template", "/etc/php8/php-fpm.conf:/etc/php8/php-fpm.conf", \
-    "-template", "/etc/php8/php-fpm.d:/etc/php8/php-fpm.d", \
+    "-template", "/etc/php82/php.ini:/etc/php82/php.ini", \
+    "-template", "/etc/php82/php-fpm.conf:/etc/php82/php-fpm.conf", \
+    "-template", "/etc/php82/php-fpm.d:/etc/php82/php-fpm.d", \
     "-template", "/google-auth.json.tmpl:/google-auth.json", \
     "-stdout", "/var/www/storage/logs/laravel.log", \
     "-stdout", "/var/log/nginx/error.log", \
-    "-stdout", "/var/log/php8/error.log", \
+    "-stdout", "/var/log/php82/error.log", \
     "-poll"]
 
 CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
