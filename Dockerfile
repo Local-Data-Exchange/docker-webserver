@@ -53,7 +53,7 @@ ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php81/php.ini /etc/php81/conf.d/php.ini && \
-    ln -s /usr/bin/php81 /usr/bin/php && \
+    rm -r /usr/bin/php && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
