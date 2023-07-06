@@ -1,7 +1,7 @@
 FROM alpine:3.18
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
-ENV DOCKERIZE_VERSION v0.7.0
+ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -49,7 +49,7 @@ RUN set -ex \
 
 ##################  CONFIGURATION STARTS  ##################
 
-ADD rootfs   /
+ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php81/php.ini /etc/php81/conf.d/php.ini && \
