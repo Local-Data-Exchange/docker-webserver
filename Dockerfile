@@ -13,7 +13,7 @@ RUN set -ex \
   && apk add --no-cache --virtual .build-deps \
     autoconf automake build-base python3 gmp-dev \
     curl \
-    nodejs nodejs-npm \
+    nodejs npm \
     tar \
   && apk add --no-cache --virtual .run-deps \
     # PHP and extensions
