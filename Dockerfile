@@ -66,7 +66,7 @@ WORKDIR /var/www
 
 ENTRYPOINT ["dockerize", \
     "-template", "/etc/php81/php.ini:/etc/php81/php.ini", \
-    "-template", "/etc/php81/php-fpm.conf:/etc/php81php-fpm.conf", \
+    "-template", "/etc/php81/php-fpm.conf:/etc/php81/php-fpm.conf", \
     "-template", "/etc/php81/php-fpm.d:/etc/php81/php-fpm.d", \
     "-template", "/google-auth.json.tmpl:/google-auth.json", \
     "-stdout", "/var/www/storage/logs/laravel.log", \
