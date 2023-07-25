@@ -34,7 +34,7 @@ RUN set -ex \
     && mkdir -p /etc/nginx/sites-available \
     && mkdir -p /etc/nginx/sites-enabled \
     && mkdir -p /var/log/supervisor \
-    && rm -Rf /var/www/* \
+    && mkdir -p  /var/www/storage/logs \
     && rm -Rf /etc/nginx/nginx.conf \
   # Composer
   && wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig \
@@ -53,7 +53,10 @@ ADD rootfs /
 
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php81/php.ini /etc/php81/conf.d/php.ini && \
-    chown -R nginx:nginx /var/www
+    chown -R nginx:nginx /var/www && \
+    touch /var/log/nginx/error.log && \
+    touch /var/log/php81/error.log && \
+    touch /var/www/storage/logs/laravel.log
 
 ##################  CONFIGURATION ENDS  ##################
 
