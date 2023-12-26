@@ -25,7 +25,7 @@ RUN set -ex \
     # Other dependencies
     mariadb-client sudo \
     # Miscellaneous packages
-    bash ca-certificates dialog git libjpeg libpng-dev openssh-client supervisor vim wget \
+    bash ca-certificates dialog git libjpeg libpng-dev openssh-client shadow vim wget \
     # Nginx
     nginx \
     # Create directories
@@ -33,7 +33,6 @@ RUN set -ex \
     && mkdir -p /run/nginx \
     && mkdir -p /etc/nginx/sites-available \
     && mkdir -p /etc/nginx/sites-enabled \
-    && mkdir -p /var/log/supervisor \
     && rm -Rf /var/www/* \
     && rm -Rf /etc/nginx/nginx.conf \
   # Composer
@@ -45,30 +44,38 @@ RUN set -ex \
   # Cleanup
   && apk del .build-deps
 
+################# S6 ####################
+ENV S6_OVERLAY_VERSION "3.1.6.1"
+ENV S6_OVERLAY_ARCH "x86_64"
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-${S6_OVERLAY_ARCH}.tar.xz
+
+# add s6 optional symlinks
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-noarch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-symlinks-noarch.tar.xz
+ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-symlinks-arch.tar.xz /tmp
+RUN tar -C / -Jxpf /tmp/s6-overlay-symlinks-arch.tar.xz
+
 ##################  INSTALLATION ENDS  ##################
 
 ##################  CONFIGURATION STARTS  ##################
 
 ADD rootfs /
-
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php7/php.ini /etc/php7/conf.d/php.ini && \
-    chown -R nginx:nginx /var/www
+    chown -R nginx:nginx /var/www && \
+    chmod 755 /etc/s6-overlay/s6-rc.d/*/run && \
+    chmod 755 /etc/s6-overlay/s6-rc.d/*/up && \
+    mkdir -p /var/www/storage/logs/ && \
+    touch /var/www/storage/logs/laravel.log /var/log/nginx/error.log /var/log/php7/error.log
 
 ##################  CONFIGURATION ENDS  ##################
 
 EXPOSE 443 80
-
+ENV UID 100
+ENV GID 101
 WORKDIR /var/www
 
-ENTRYPOINT ["dockerize", \
-    "-template", "/etc/php7/php.ini:/etc/php7/php.ini", \
-    "-template", "/etc/php7/php-fpm.conf:/etc/php7/php-fpm.conf", \
-    "-template", "/etc/php7/php-fpm.d:/etc/php7/php-fpm.d", \
-    "-template", "/google-auth.json.tmpl:/google-auth.json", \
-    "-stdout", "/var/www/storage/logs/laravel.log", \
-    "-stdout", "/var/log/nginx/error.log", \
-    "-stdout", "/var/log/php7/error.log", \
-    "-poll"]
-
-CMD ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT [ "/init" ]
