@@ -1,7 +1,7 @@
 FROM alpine:3.9
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
-ENV DOCKERIZE_VERSION v0.6.0
+ENV DOCKERIZE_VERSION v0.6.1
 RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && tar -C /usr/local/bin -xzvf dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-alpine-linux-amd64-$DOCKERIZE_VERSION.tar.gz
@@ -45,7 +45,7 @@ RUN set -ex \
   && apk del .build-deps
 
 ################# S6 ####################
-ENV S6_OVERLAY_VERSION "3.1.6.1"
+ENV S6_OVERLAY_VERSION "3.1.6.0"
 ENV S6_OVERLAY_ARCH "x86_64"
 ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz /tmp
 RUN tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz
