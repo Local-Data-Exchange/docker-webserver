@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.7
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV DOCKERIZE_VERSION v0.6.1
@@ -39,7 +39,7 @@ RUN set -ex \
   && wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig \
     && php7 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php7 -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
-    && php7 composer-setup.php --install-dir=/usr/bin --filename=composer --version=1.10.7 \
+    && php7 composer-setup.php --install-dir=/usr/bin --filename=composer --version=1.3.0 \
     && php7 -r "unlink('composer-setup.php'); unlink('installer.sig');" \
   # Cleanup
   && apk del .build-deps
