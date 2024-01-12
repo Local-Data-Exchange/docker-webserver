@@ -68,6 +68,7 @@ RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/defau
     chown -R nginx:nginx /var/www && \
     chmod 755 /etc/s6-overlay/s6-rc.d/*/run && \
     chmod 755 /etc/s6-overlay/s6-rc.d/*/up && \
+    chmod 755 /setup.sh && \
     mkdir -p /var/www/storage/logs/ && \
     touch /var/www/storage/logs/laravel.log /var/log/nginx/error.log /var/log/php7/error.log
 
