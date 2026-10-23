@@ -1,4 +1,4 @@
-FROM alpine:3.18
+FROM alpine:3.22
 MAINTAINER Rakshit Menpara <rakshit@improwised.com>
 
 ENV DOCKERIZE_VERSION v0.6.1
@@ -54,6 +54,10 @@ ADD rootfs /
 RUN ln -s /etc/nginx/sites-available/default.conf /etc/nginx/sites-enabled/default.conf && \
     ln -s /etc/php82/php.ini /etc/php82/conf.d/php.ini && \
     ln -s /usr/bin/php82 /usr/bin/php && \
+    mkdir -p /var/www/storage/logs && \
+    touch /var/log/nginx/error.log && \
+    touch /var/log/php82/error.log && \
+    touch /var/www/storage/logs/laravel.log && \
     chown -R nginx:nginx /var/www
 
 ##################  CONFIGURATION ENDS  ##################
